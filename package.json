@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-num-theory-analyzer",
   "description": "用于对输入的整数进行一系列数论分析，包括判断其是否为质数，列出所有因数，验证其是否能表示为两个整数的平方和，或者检验其是否符合 1+2+3+...+n 的求和格式。",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [

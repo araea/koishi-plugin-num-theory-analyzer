@@ -15,9 +15,15 @@ export const usage = `## 输入 📥
 - 是否满足格式 1+2+3+...+n 的和(是/否) 🌈
 - 如果满足,输出整数 n 🎯`
 
-export interface Config { }
+export interface Config {
+  min: number // 最小输入值
+  max: number // 最大输入值
+}
 
-export const Config: Schema<Config> = Schema.object({})
+export const Config: Schema<Config> = Schema.object({
+  min: Schema.number().default(1), // 默认最小值为 1
+  max: Schema.number().default(1000), // 默认最大值为 1000
+})
 
 class NumberTheoryAnalysis {
   private input: number;
@@ -109,15 +115,22 @@ class NumberTheoryAnalysis {
   }
 }
 
-export function apply(ctx: Context) {
+export function apply(ctx: Context, config: Config) {
 
   ctx.command('NumTheoryAnalyzer <nums:text>', ' 数字分析 ')
     .action(({ session }, nums) => {
       let arr = nums.trim().split(/[,，\s]+/);
       let finalOutput: string[] = [];
       arr.forEach(num => {
-        let output = test(parseInt(num));
-        finalOutput = finalOutput.concat(output);
+        let input = parseInt(num);
+        // 检查输入是否在配置范围内
+        if (input < config.min || input > config.max) {
+          finalOutput.push("\n数字:" + input);
+          finalOutput.push("输入错误:该数字超出了配置范围，请输入一个介于 " + config.min + " 和 " + config.max + " 之间的整数。");
+        } else {
+          let output = test(input);
+          finalOutput = finalOutput.concat(output);
+        }
       });
       session.send(finalOutput.join("\n"));
     })
